@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import requests
 from uszipcode import SearchEngine
 import html5lib
+import addfips
 
 # Bot Variables
 bot = commands.Bot(command_prefix = '!', case_insensitive=True)
@@ -69,8 +70,24 @@ async def covidvaccine(ctx,
         await ctx.respond("https://www.vaccines.gov/results/?zipcode=%s&medicationGuids=779bfe52-0dd8-4023-a183-457eb100fccc,784db609-dc1f-45a5-bad6-8db02e79d44f,a84fb9ed-deb4-461c-b785-e17c782ef88b&medicationKeys=moderna_covid_19_vaccine,j%%26j_janssen_covid_19_vaccine,pfizer_covid_19_vaccine&appointments=true" % zipcode)
     else:
         await ctx.respond("I was unable to find anything. Please ensure your search options for age and zipcode are correctly entered and try again. You entered age: %s --- your city is: %s" % (age, majorCity))
+        
+        
+@bot.slash_command(guild_ids=[879461344322138173], description="Check your local community's COVID status")
+async def covidlocal(ctx,
+                    county:Option(str),
+                    stateabbr:Option(str,"State abbreviation",max=2) 
+                    ):
+     
+    
+    af = addfips.AddFIPS()
+    
+    print(af.get_county_fips(county, state=stateabbr))
+    
+    await ctx.respond("I have your state as %s, and your county as %s" % (stateabbr, county))
+    #URL = "https://covid.cdc.gov/covid-data-tracker/#county-view?list_select_state=%s&data-type=CommunityLevels&list_select_county=%s" % (state, fips)
     
     
+ 
 
 
     
