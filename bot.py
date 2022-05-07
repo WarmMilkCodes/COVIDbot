@@ -5,11 +5,6 @@ import config
 from bs4 import BeautifulSoup
 import requests
 import html5lib
-import time
-#from scraper import CovidCases
-
-#import scraper
-
 
 # Bot Variables
 bot = commands.Bot(command_prefix = '!', case_insensitive=True)
