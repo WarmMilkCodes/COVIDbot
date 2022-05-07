@@ -7,6 +7,7 @@ import config
 from bs4 import BeautifulSoup
 import requests
 from uszipcode import SearchEngine
+import html5lib
 
 # Bot Variables
 bot = commands.Bot(command_prefix = '!', case_insensitive=True)
@@ -28,7 +29,7 @@ async def checkworking(ctx):
 async def covidcounter(ctx):
     URL = "https://www.worldometers.info/coronavirus/"
     r = requests.get(URL)
-    soup = BeautifulSoup(r.content, 'htmlparser')
+    soup = BeautifulSoup(r.content, 'html5lib')
     covidCases = soup.find('div', class_="maincounter-number")
     counter = covidCases.text.strip()
     print(counter)
