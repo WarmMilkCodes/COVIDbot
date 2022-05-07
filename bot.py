@@ -1,3 +1,4 @@
+from time import sleep
 import discord
 from discord.ext import commands
 from discord.commands import Option
@@ -43,18 +44,32 @@ async def covidinfo(ctx):
 async def covidtest(ctx):
     await ctx.respond("Request your free at-home COVID tests from the USPS: https://special.usps.com/testkits")
     
-'''    
+
 @bot.slash_command(guild_ids=[879461344322138173], description="Check for vaccine locations near you")
 async def covidvaccine(ctx, 
-    zipcode:Option(int, max=5)
+    zipper:Option(int, max=5),
+    age:Option(int, min=5)
     ):
     search = SearchEngine()
-    zipcodeSearch = search.by_zipcode(zipcode)
+    zipcodeSearch = search.by_zipcode(zipper)
     zipList = zipcodeSearch.values()
     majorCity = zipList[3]
-    await ctx.respond("I've got your city as %s" % majorCity)
+    if age >= 5 and age <= 11:
+        await ctx.respond("I'm looking for vaccines suitable for age of %s near %s now." % (age, majorCity))
+        sleep(3)
+        await ctx.respond("https://www.vaccines.gov/results/?zipcode=%s&medicationGuids=25f1389c-5597-47cc-9a9d-3925d60d9c21&medicationKeys=pfizer_covid_19_vaccine_pediatric_range_1&appointments=true" % zipper)
+    elif age >= 12 and age < 18:
+        await ctx.respond("I'm looking for vaccines suitable for age of %s near %s now." % (age, majorCity))
+        sleep(3)
+        await ctx.respond("https://www.vaccines.gov/results/?zipcode=%s&medicationGuids=a84fb9ed-deb4-461c-b785-e17c782ef88b&medicationKeys=pfizer_covid_19_vaccine&appointments=true" % zipper)
+    elif age >= 18:
+        await ctx.respond("I'm looking for vaccines suitable for age of %s near %s now." % (age, majorCity))
+        sleep(3)
+        await ctx.respond("https://www.vaccines.gov/results/?zipcode=%s&medicationGuids=779bfe52-0dd8-4023-a183-457eb100fccc,784db609-dc1f-45a5-bad6-8db02e79d44f,a84fb9ed-deb4-461c-b785-e17c782ef88b&medicationKeys=moderna_covid_19_vaccine,j%%26j_janssen_covid_19_vaccine,pfizer_covid_19_vaccine&appointments=true" % zipper)
+    else:
+        await ctx.respond("I was unable to find anything. Please ensure your search options for age and zipcode are correctly entered and try again. You entered age: %s --- your city is: %s" % (age, majorCity))
     
-'''
+    
 
 
     
