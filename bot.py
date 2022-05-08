@@ -1,4 +1,5 @@
 from time import sleep
+from urllib import response
 import discord
 from discord.ext import commands
 from discord.commands import Option
@@ -9,9 +10,10 @@ import requests
 from uszipcode import SearchEngine
 import html5lib
 import addfips
+import urllib.request, json
 
 # Bot Variables
-bot = commands.Bot(command_prefix = '!', case_insensitive=True)
+bot = commands.Bot(case_insensitive=True)
 
 
 @bot.event
@@ -75,17 +77,23 @@ async def covidvaccine(ctx,
 @bot.slash_command(guild_ids=[879461344322138173], description="Check your local community's COVID status")
 async def covidlocal(ctx,
                     county:Option(str),
-                    stateabbr:Option(str,"State abbreviation",max=2) 
+                    state:Option(str,"State abbreviation",max=2) 
                     ):
      
     
     af = addfips.AddFIPS()
     
-    print(af.get_county_fips(county, state=stateabbr))
+    countyCode = af.get_county_fips(county, state=state)
     
-    await ctx.respond("I have your state as %s, and your county as %s" % (stateabbr, county))
-    #URL = "https://covid.cdc.gov/covid-data-tracker/#county-view?list_select_state=%s&data-type=CommunityLevels&list_select_county=%s" % (state, fips)
-    
+    await ctx.respond("Checking COVID-19 Community Level in %s County, %s" % (county.capitalize(),state.upper()))
+    sleep(3)
+    jsonURL = "https://api.covidactnow.org/v2/county/%s.json?apiKey=%s" % (countyCode, config.CDC_API)
+    print(jsonURL)
+    response = urllib.request.urlopen(jsonURL)
+    data = json.loads(response.read())
+    cases = data['actuals']['cases']
+    deaths = data['actuals']['deaths']
+    await ctx.respond("Results for %s County, %s. Total cases: %s. Total deaths: %s" % (county.capitalize(), state.upper(), cases, deaths))
     
  
 
