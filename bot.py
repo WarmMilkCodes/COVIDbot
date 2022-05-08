@@ -35,7 +35,7 @@ async def covidcounter(ctx):
     soup = BeautifulSoup(r.content, 'html5lib')
     covidCases = soup.find('div', class_="maincounter-number")
     counter = covidCases.text.strip()
-    print(counter)
+    #print(counter)
     await ctx.respond('The current number of COVID-19 cases to date is %s.' % counter)
     
     
@@ -88,7 +88,7 @@ async def covidlocal(ctx,
     await ctx.respond("Checking COVID-19 Community Level in %s County, %s" % (county.capitalize(),state.upper()))
     sleep(3)
     jsonURL = "https://api.covidactnow.org/v2/county/%s.json?apiKey=%s" % (countyCode, config.CDC_API)
-    print(jsonURL)
+    #print(jsonURL)
     response = urllib.request.urlopen(jsonURL)
     data = json.loads(response.read())
     cases = data['actuals']['cases']
